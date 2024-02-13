@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <title>Alphabet Predictor</title>
+    <style>
+        body {
+            font-family: 'Century Gothic', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: url('static\\bg.jpg') center/cover no-repeat;
+        }
+
+        .topbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background-color: aqua;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .holdem {
+            background-color: rgba(127, 255, 212, 0.599);
+            border-radius: 20px;
+            margin-top: 80px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            margin-top: 20px;
+            text-align: center;
+            color: #333;
+        }
+
+        #container {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+
+        #drawingCanvas {
+            border: 1px solid #333;
+            background-color: white;
+            margin: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+            height: 300px;
+            touch-action: none; /* Disable touch actions for the canvas */
+        }
+
+        #alphabetButtons {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            justify-content: center;
+            margin: 20px;
+            border-radius: 20px;
+            padding: 10px;
+            border: 1px solid black;
+            height: 280px;
+            width: 280px;
+        }
+
+        #alphabetButtons button {
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #208cf1;
+            color: white;
+            border: none;
+            border-radius: 40px;
+            transition: background-color 0.3s ease;
+        }
+
+        #alphabetButtons button:hover {
+            background-color: #2066f2;
+            transition: 0.3s ease;
+        }
+
+        #predictButton,
+        #refreshButton {
+            display: inline-block;
+            margin: 20px 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #208cf1;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        #predictButton:hover,
+        #refreshButton:hover {
+            background-color: #2066f2;
+        }
+
+        #predictionResult,
+        #pResult,
+        #selectedResult {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 20px;
+            color: black;
+            font-weight: bold;
+        }
+
+        #imagePlaceholder {
+            display: block;
+            margin: 20px auto;
+            max-width: 300px;
+            height: auto;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="topbar">
+        <center><img height="60px" style="margin-top: 10px;" src="/static/text-1702063990716.png" alt="Website Logo"></center>
+    </div>
+
+    <div class="holdem">
+        <h1>Learn Alphabets</h1>
+        <div id="container">
+            <canvas id="drawingCanvas" width="300" height="300"></canvas>
+            <div id="alphabetButtons">
+            <button onclick="selectAlphabet('0')">0</button>
+            <button onclick="selectAlphabet('1')">1</button>
+            <button onclick="selectAlphabet('2')">2</button>
+            <button onclick="selectAlphabet('3')">3</button>
+            <button onclick="selectAlphabet('4')">4</button>
+            <button onclick="selectAlphabet('5')">5</button>
+            <button onclick="selectAlphabet('6')">6</button>
+            <button onclick="selectAlphabet('7')">7</button>
+            <button onclick="selectAlphabet('8')">8</button>
+            <button onclick="selectAlphabet('9')">9</button>
+        </div>
+    </div>
+
+    <center>
+        <button id="predictButton">Check</button>
+        <button id="refreshButton" onclick="refreshPage()">Refresh</button>
+    </center>
+    <div id="selectedResult"></div>
+    <div id="predictionResult"></div>
+    <div id="pResult"></div>
+    </div>
+    <script>
+        const canvas = document.getElementById('drawingCanvas');
+        const ctx = canvas.getContext('2d');
+        let isDrawing = false;
+        let selectedAlphabet = '';
+
+        // Fill the canvas with white pixels initially
+        ctx.fillStyle = 'white';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('touchstart', startDrawing);
+
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('touchmove', draw);
+
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('touchend', stopDrawing);
+
+        canvas.addEventListener('mouseout', stopDrawing);
+        canvas.addEventListener('touchcancel', stopDrawing);
+
+        function startDrawing(e) {
+            isDrawing = true;
+            draw(e);
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+
+            let x, y;
+
+            if (e.touches) {
+                // Touch event
+                x = e.touches[0].clientX - canvas.offsetLeft;
+                y = e.touches[0].clientY - canvas.offsetTop;
+            } else {
+                // Mouse event
+                x = e.clientX - canvas.offsetLeft;
+                y = e.clientY - canvas.offsetTop;
+            }
+
+            ctx.lineWidth = 20;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = 'black';
+
+            ctx.lineTo(x, y);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.arc(x, y, ctx.lineWidth / 2, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+        }
+
+        function stopDrawing() {
+            isDrawing = false;
+            ctx.beginPath();
+        }
+
+        function selectAlphabet(alphabet) {
+            selectedAlphabet = alphabet;
+            console.log(`Selected Alphabet: ${selectedAlphabet}`);
+            // Update the selected result
+            document.getElementById('selectedResult').innerHTML = `Selected Alphabet: ${selectedAlphabet}`;
+            // Update the selected image
+            document.getElementById('selectedImage').src = `images/${selectedAlphabet}.jpg`;
+        }
+
+        const predictButton = document.getElementById('predictButton');
+        const predictionResult = document.getElementById('predictionResult');
+        const pResult = document.getElementById('pResult');
+
+        predictButton.addEventListener('click', () => {
+            if (!selectedAlphabet) {
+                console.log('Please select an alphabet before predicting.');
+                return;
+            }
+
+            const imageData = canvas.toDataURL();
+
+            // Send the image data to the Flask server for prediction
+            fetch('/predict12', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    image: imageData,
+                    selected_alphabet: selectedAlphabet,
+                }),
+            })
+            .then(response => response.json())
+            .then(prediction => {
+                const predictedLetter = prediction.prediction;
+                const conf = prediction.confidence_scores;
+                const session = prediction.session_id;
+                predictionResult.textContent = `The Alphabet is: ${predictedLetter}`;
+                pResult.textContent = `Confidence: ${conf}`;
+            })
+            .catch(error => {
+                console.error('Error predicting:', error);
+            });
+        });
+
+        function refreshPage() {
+            // Reload the page
+            location.reload();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alpha-Bit</title>
+    <style>
+        body {
+            font-family: 'Century Gothic', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh; /* Ensure the body covers the full viewport height */
+            background: url('static/bg.jpg') center/cover no-repeat;
+        }
+
+        .topbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background-color: aqua;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .container {
+            padding-top: 160px; /* Adjusted for the fixed topbar on mobile devices */
+            text-align: center;
+        }
+
+        .button-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center; /* Center the buttons on smaller screens */
+        }
+
+        .button {
+            width: 150px; /* Adjusted width for better spacing on smaller screens */
+            height: 100%;
+            margin: 10px;
+            overflow: hidden;
+            border-radius: 15%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease-in-out;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .button:hover {
+            transform: scale(1.1);
+        }
+
+        .button img {
+            width: 80%;
+            height: 80%;
+            object-fit: cover;
+            border-radius: 10%;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .button:hover img {
+            transform: scale(1.2);
+        }
+
+        .button p {
+            margin-top: 5px; /* Adjusted spacing for smaller screens */
+            font-size: 14px; /* Adjusted font size for better readability on smaller screens */
+        }
+
+        @media only screen and (max-width: 600px) {
+            .container {
+                padding-top: 120px; /* Further adjustment for smaller screens */
+            }
+
+            .button {
+                width: 120px; /* Further adjustment for smaller screens */
+                padding: 8px; /* Further adjustment for smaller screens */
+            }
+
+            .button img {
+                width: 70%; /* Further adjustment for smaller screens */
+                height: 70%; /* Further adjustment for smaller screens */
+            }
+
+            .button p {
+                font-size: 12px; /* Further adjustment for smaller screens */
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="topbar">
+    <center><img height="60px" style="margin-top: 10px;" src="/static/text-1702063990716.png" alt="Website Logo"></center>
+</div>
+
+<div class="container">
+    <div class="button-container">
+        <div class="button">
+            <a href="/numbers">
+                <img src="{{ url_for('static', filename='1.png') }}" alt="Button 1">
+            </a>
+            <p>Numbers</p>
+        </div>
+
+        <div class="button">
+            <a href="/alphabets">
+                <img src="{{ url_for('static', filename='a.png') }}" alt="Button 2">
+            </a>
+            <p>Alphabets</p>
+        </div>
+
+        <div class="button">
+            <a href="/lowercase">
+                <img src="{{ url_for('static', filename='la.png') }}" alt="Button 3">
+            </a>
+            <p>Lowercase</p>
+        </div>
+
+        <div class="button">
+            <a href="/draw">
+                <img src="{{ url_for('static', filename='draw.png') }}" alt="Button 4">
+            </a>
+            <p>Draw</p>
+        </div>
+        <div class="button">
+            <a href="{{ url_for('user_insights', username=username) }}">
+                <img src="{{ url_for('static', filename='family.png') }}" alt="Button 5">
+            </a>
+            <p>Draw</p>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

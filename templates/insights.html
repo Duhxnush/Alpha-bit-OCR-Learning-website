@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Insights</title>
+    <style>
+        body {
+            font-family: 'Century Gothic', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: url('http://127.0.0.1:5000/static/bg.jpg') center/cover no-repeat;
+        }
+
+        .topbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background-color: aqua;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000; 
+        }
+
+        .topbar img {
+            height: 60px;
+            margin-top: 10px;
+        }
+
+        .holdem {
+            background-color: rgba(229, 255, 246, 0.781);
+            border-radius: 20px;
+            margin-top: 80px;
+            width: 90%; /* Adjusted width for better responsiveness */
+            padding: 20px;
+            font-size: 16px;
+            line-height: 1.5; /* Improved line height for better readability */
+            text-align: justify; /* Applied text alignment for better readability */
+            box-sizing: border-box; /* Ensures padding is included in the width */
+        }
+
+        h1 {
+            text-align: center; /* Center-align headings */
+        }
+
+        /* Media query for smaller screens */
+        @media only screen and (max-width: 600px) {
+            .topbar img {
+                height: 40px;
+                margin-top: 5px;
+            }
+
+            .holdem {
+                width: 95%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="topbar">
+        <img src="http://127.0.0.1:5000/static/text-1702063990716.png" alt="Website Logo">
+    </div>
+
+    <div class="holdem">
+        <h1>Insights for {{ username }}</h1>
+        <p>{{ insights }}</p>
+    </div>
+</body>
+</html>

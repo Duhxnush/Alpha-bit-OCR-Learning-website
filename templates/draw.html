@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paint and Draw</title>
+    <style>
+        body {
+            font-family: Century Gothic;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: url('static\\bg.jpg') center/cover no-repeat;
+        }
+
+        .topbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background-color: aqua;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        h1 {
+            margin-top: 60px;
+            text-align: center;
+            color: #333;
+        }
+
+        #drawingCanvas {
+            border: 1px solid #333;
+            background-color: white;
+            margin: 10px auto;
+            display: block;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            max-width: 100%;
+        }
+
+        #saveButton {
+            display: block;
+            margin: 10px auto;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        #saveButton:hover {
+            background-color: #555;
+        }
+
+        #colorPicker {
+            margin: 10px auto;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="topbar">
+        <img height="40px" style="margin-top: 5px;" src="/static/text-1702063990716.png" alt="Website Logo">
+    </div>
+
+    <h1>Paint and Draw</h1>
+    <canvas id="drawingCanvas" width="400" height="200"></canvas>
+    <input type="color" id="colorPicker" value="#000000">
+    <button id="saveButton">Save</button>
+
+    <script>
+        const canvas = document.getElementById('drawingCanvas');
+        const ctx = canvas.getContext('2d');
+        let isDrawing = false;
+
+        // Fill the canvas with white pixels initially
+        ctx.fillStyle = 'white';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Event listeners for both mouse and touch
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseout', stopDrawing);
+
+        canvas.addEventListener('touchstart', startDrawing);
+        canvas.addEventListener('touchmove', draw);
+        canvas.addEventListener('touchend', stopDrawing);
+
+        function startDrawing(e) {
+            isDrawing = true;
+            draw(e);
+        }
+
+        function draw(e) {
+            e.preventDefault(); // Prevent scrolling on touch devices
+            const color = document.getElementById('colorPicker').value;
+            ctx.lineWidth = 5;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = color;
+
+            // Use pageX and pageY for touch events
+            const x = e.pageX || e.touches[0].pageX;
+            const y = e.pageY || e.touches[0].pageY;
+
+            ctx.lineTo(x - canvas.offsetLeft, y - canvas.offsetTop);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.arc(x - canvas.offsetLeft, y - canvas.offsetTop, ctx.lineWidth / 2, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.moveTo(x - canvas.offsetLeft, y - canvas.offsetTop);
+        }
+
+        function stopDrawing() {
+            isDrawing = false;
+            ctx.beginPath();
+        }
+
+        const saveButton = document.getElementById('saveButton');
+
+        saveButton.addEventListener('click', () => {
+            const fileName = prompt('Enter a name for your drawing:');
+            if (fileName) {
+                const imageData = canvas.toDataURL('image/png');
+                const link = document.createElement('a');
+                link.href = imageData;
+                link.download = fileName + '.png';
+                link.click();
+            }
+        });
+    </script>
+</body>
+</html>
